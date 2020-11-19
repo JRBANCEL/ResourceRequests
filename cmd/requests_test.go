@@ -193,7 +193,7 @@ func TestMultiplyResourceList(t *testing.T) {
 
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			got := MultipleResourceList(c.list, c.factor)
+			got := MultiplyResourceList(c.list, c.factor)
 			if !cmp.Equal(c.want, got) {
 				t.Errorf("Unexpected output of MultiplyResourceList, (-want, +got):\n%s", cmp.Diff(c.want, got))
 			}

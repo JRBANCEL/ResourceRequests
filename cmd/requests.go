@@ -79,7 +79,7 @@ func parseFile(path string) ([]requests, error) {
 			if dep.Spec.Replicas != nil {
 				replicas = int(*dep.Spec.Replicas)
 			}
-			req.Requests = MultipleResourceList(RequestFromPodSpec(&dep.Spec.Template.Spec), replicas)
+			req.Requests = MultiplyResourceList(RequestsFromPodSpec(&dep.Spec.Template.Spec), replicas)
 			break
 		case "Pod":
 			var pod corev1.Pod
@@ -87,7 +87,7 @@ func parseFile(path string) ([]requests, error) {
 			if err != nil {
 				return nil, fmt.Errorf("failed to parse Pod: %v. Object:\n %s", err, obj)
 			}
-			req.Requests = RequestFromPodSpec(&pod.Spec)
+			req.Requests = RequestsFromPodSpec(&pod.Spec)
 			break
 		case "Job":
 			var job batchv1.Job
@@ -99,7 +99,7 @@ func parseFile(path string) ([]requests, error) {
 			if job.Spec.Parallelism != nil {
 				parallelism = int(*job.Spec.Parallelism)
 			}
-			req.Requests = MultipleResourceList(RequestFromPodSpec(&job.Spec.Template.Spec), parallelism)
+			req.Requests = MultiplyResourceList(RequestsFromPodSpec(&job.Spec.Template.Spec), parallelism)
 			break
 		default:
 			continue
@@ -116,7 +116,7 @@ func parseFile(path string) ([]requests, error) {
 
 // RequestsFromPodSpec returns a ResourceList representing the sum of all the
 // resource requests specified in the PodSpec.
-func RequestFromPodSpec(spec *corev1.PodSpec) corev1.ResourceList {
+func RequestsFromPodSpec(spec *corev1.PodSpec) corev1.ResourceList {
 	var requests []corev1.ResourceList
 	for _, container := range spec.Containers {
 		if container.Resources.Requests != nil {
@@ -149,7 +149,8 @@ func SumOfResourceList(lists []corev1.ResourceList) corev1.ResourceList {
 	return out
 }
 
-func MultipleResourceList(list corev1.ResourceList, factor int) corev1.ResourceList {
+// MultiplyResourceList multiplies a ResourceList by the provided factor.
+func MultiplyResourceList(list corev1.ResourceList, factor int) corev1.ResourceList {
 	out := make(corev1.ResourceList, len(list))
 	for k, v := range list {
 		acc := resource.Quantity{}
