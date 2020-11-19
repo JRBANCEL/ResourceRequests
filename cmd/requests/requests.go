@@ -42,7 +42,7 @@ func main() {
 		}
 		for _, req := range reqs {
 			log.Printf(
-				"Kind: %s, Object: %s/%s CPU: %s, Memory: %dMi\n",
+				"Kind: %s, Object: %s/%s CPU: %s, Memory: %dM\n",
 				req.Kind, req.Namespace, req.Name, req.Requests.Cpu(),
 				req.Requests.Memory().ScaledValue(resource.Mega))
 			lists = append(lists, req.Requests)
@@ -52,7 +52,7 @@ func main() {
 	})
 
 	total := SumOfResourceList(lists)
-	log.Printf("Total\n\tCPU: %s\n\tMemory: %dMi\n", total.Cpu(), total.Memory().ScaledValue(resource.Mega))
+	log.Printf("Total\n\tCPU: %s\n\tMemory: %dM\n", total.Cpu(), total.Memory().ScaledValue(resource.Mega))
 }
 
 func parseFile(path string) ([]requests, error) {
