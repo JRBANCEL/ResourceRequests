@@ -41,7 +41,10 @@ func main() {
 			return fmt.Errorf("failed to parse %q: %v", path, err)
 		}
 		for _, req := range reqs {
-			log.Printf("Kind: %s, Object: %s/%s CPU: %s, Memory: %s\n", req.Kind, req.Namespace, req.Name, req.Requests.Cpu(), req.Requests.Memory())
+			log.Printf(
+				"Kind: %s, Object: %s/%s CPU: %s, Memory: %dMi\n",
+				req.Kind, req.Namespace, req.Name, req.Requests.Cpu(),
+				req.Requests.Memory().ScaledValue(resource.Mega))
 			lists = append(lists, req.Requests)
 		}
 
@@ -49,8 +52,7 @@ func main() {
 	})
 
 	total := SumOfResourceList(lists)
-	// TODO: format using standard units (mCPU and Mi)
-	log.Printf("Total\n\tCPU: %s\n\tMemory: %s\n", total.Cpu(), total.Memory())
+	log.Printf("Total\n\tCPU: %s\n\tMemory: %dMi\n", total.Cpu(), total.Memory().ScaledValue(resource.Mega))
 }
 
 func parseFile(path string) ([]requests, error) {
