@@ -1,0 +1,13 @@
+apiVersion: core/v1
+kind: Pod
+metadata:
+  name: some-name
+  namespace: some-namespace
+spec:
+  containers:
+  - name: some-container
+    image: some-image
+    resources:
+      requests:
+        cpu: 30m
+        memory: 40Mi

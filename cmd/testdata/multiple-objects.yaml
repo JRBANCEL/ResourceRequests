@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: some-name
+  namespace: some-namespace
+spec:
+  replicas: 5
+  template:
+    spec:
+      containers:
+      - name: some-container
+        image: some-image
+        resources:
+          requests:
+            cpu: 10m
+            memory: 100Mi
+      - name: no-requests
+        image: hello-world
+        resources:
+          limits:
+            cpu: 50m
+      - name: just-cpu-request
+        resources:
+          requests:
+            cpu: 10m
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-autoscaler
+  namespace: knative-serving
+data:
+  panic-threshold-percentage: "200.0"
+---
+apiVersion: core/v1
+kind: Pod
+metadata:
+  name: some-name
+  namespace: some-namespace
+spec:
+  containers:
+    - name: some-container
+      image: some-image
+      resources:
+        requests:
+          cpu: 30m
+          memory: 40Mi
