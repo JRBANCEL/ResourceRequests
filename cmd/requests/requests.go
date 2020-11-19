@@ -25,8 +25,8 @@ type requests struct {
 }
 
 func main() {
-	if len(os.Args) < 1 {
-		log.Printf("Usage: Requests [FILE|DIRECTORY]")
+	if len(os.Args) < 2 {
+		log.Printf("Usage: requests [FILE|DIRECTORY]")
 		return
 	}
 
